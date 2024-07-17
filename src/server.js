@@ -2,10 +2,11 @@ import fs from "fs";
 import path from "path";
 import OpenAI from "openai";
 import express from "express";
+import bodyParser from "body-parser";
 
 const openai = new OpenAI({
-    organization: "YOUR_ORG_ID",
-    project: "$PROJECT_ID"
+    organization: "org-SfzIm9D1c1Y4AAmdWvUpGbsS",
+    project: "proj_MBIUINyDcYCj1UYGDVtiB2Er"
 });
 
 const speechFile = path.resolve("./speech.mp3");
@@ -13,7 +14,19 @@ const speechFile = path.resolve("./speech.mp3");
 const app = express();
 const port = 8000;
 
+app.use((req, res, next) => {
+  res.append('Access-Control-Allow-Origin', ['*']);
+  res.append('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+  res.append('Access-Control-Allow-Headers', 'Content-Type');
+  res.append('bypass-tunnel-reminder',["*"]);
+  next();
+});
+
+app.use(bodyParser.json())
+
 app.post('/createAudio', async (req, res) => {
+
+        console.log('>>> req === ====================================', req)
         const mp3 = await openai.audio.speech.create({
           model: "tts-1",
           voice: "alloy",
@@ -21,9 +34,10 @@ app.post('/createAudio', async (req, res) => {
           
         });
         console.log(speechFile);
-        const buffer = Buffer.from(await mp3.arrayBuffer());
+        const arrBuffer = await mp3.arrayBuffer()
+        const buffer = Buffer.from(arrBuffer);
         await fs.promises.writeFile(speechFile, buffer);
-        res.send(speechFile);
+        res.send(arrBuffer);
 });
 
 app.get('/', (req, res) => {

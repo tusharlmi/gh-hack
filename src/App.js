@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import logo from './logo.svg';
+import axios from 'axios';
 import './App.css';
 
 function App() {
@@ -10,21 +11,31 @@ function App() {
   console.log('>>> val', val, setVal)
 
     const createAudio = async () => {
-      const res = await fetch('/createAudio',{
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          text: 'Hello world'
-        })
+      axios
+      //.post('http://127.0.0.1:8000/createAudio', {
+        .post('https://hackathingh.loca.lt/createAudio', {
+          data: val
       })
-      console.log('>>> res', res)
-      if(res.ok){
-        const filePath = await res.json()
-        console.log('>>> data', filePath)
-        setAudioPath(filePath)
-    }
+      .then((arrayBuffer) => {
+        //const blob = new Blob([arrayBuffer], { type: "audio/wav" });
+        //audio.src = window.URL.createObjectURL(blob);
+      })
+      .catch((error) => console.error(error));
+    //   const res = await fetch('/createAudio',{
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //     },
+    //     body: JSON.stringify({
+    //       text: 'Hello world'
+    //     })
+    //   })
+    //   console.log('>>> res', res)
+    //   if(res.ok){
+    //     const filePath = await res.json()
+    //     console.log('>>> data', filePath)
+    //     setAudioPath(filePath)
+    // }
   }
 
   return (
