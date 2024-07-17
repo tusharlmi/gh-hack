@@ -2,14 +2,19 @@
     font-size: calc(10px + 2vmin);
     color: white;
     background-color: #282c34;
+    min-height: 100vh;
 }
 
-.container {
-    text-align: center;
-    min-height: 100vh;
+.logo-container {
     align-items: center;
     display: flex;
     justify-content: center;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    text-align: center;
 }
 
 .column {
@@ -19,4 +24,13 @@
 
 .extensions {
     padding: 5px;
+}
+
+@keyframes App-logo-spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
 }
