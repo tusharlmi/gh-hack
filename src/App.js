@@ -7,35 +7,34 @@ function App() {
 
   const [val, setVal] = useState(false)
   const [audioPath, setAudioPath] = useState('')
+  const [voiceType, setVoiceType] = useState('alloy')
 
   console.log('>>> val', val, setVal)
 
     const createAudio = async () => {
-      axios
-      //.post('http://127.0.0.1:8000/createAudio', {
-        .post('https://hackathingh.loca.lt/createAudio', {
-          data: val
+      // axios
+      //   .post('https://hackathingh.loca.lt/createAudio', 
+      //     {
+      //       data: val
+      //     }
+      //   )
+      // .then((arrayBuffer) => {
+      //   //const blob = new Blob([arrayBuffer], { type: "audio/wav" });
+      //   //audio.src = window.URL.createObjectURL(blob);
+      // })
+      // .catch((error) => console.error(error));
+      fetch('https://hackathingh.loca.lt/createAudio', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ text: val, voiceType: voiceType }),
       })
-      .then((arrayBuffer) => {
-        //const blob = new Blob([arrayBuffer], { type: "audio/wav" });
-        //audio.src = window.URL.createObjectURL(blob);
-      })
-      .catch((error) => console.error(error));
-    //   const res = await fetch('/createAudio',{
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //     },
-    //     body: JSON.stringify({
-    //       text: 'Hello world'
-    //     })
-    //   })
-    //   console.log('>>> res', res)
-    //   if(res.ok){
-    //     const filePath = await res.json()
-    //     console.log('>>> data', filePath)
-    //     setAudioPath(filePath)
-    // }
+      // .then(res => res.json())
+      // .then(data => {
+      //   console.log('>>> data', data)
+      // })
+      
   }
 
   return (
@@ -46,10 +45,19 @@ function App() {
           GH hackathon project
         </p>
         <input type="text" value={val} onChange={(e) => setVal(e.target.value)} />
+        
         {
-          val && <p>{
+          val && <p>
+            <select onChange={(e) =>  setVoiceType(e.target.value)}>
+              <option value="alloy">Alloy</option>
+              <option value="echo">Echo</option>
+              <option value="fable">Fable</option>
+              <option value="onyx">Onyx</option>
+              <option value="nova">Nova</option>
+              <option value="shimmer">Shimmer</option>
+            </select>
             <button onClick={createAudio}>Create Audio</button>
-            }</p>
+            </p>
         }
 
         {
