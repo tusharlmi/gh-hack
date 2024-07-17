@@ -1,40 +1,30 @@
 import React, { useState } from 'react';
 import logo from './logo.svg';
-import axios from 'axios';
 import './App.css';
 
 function App() {
 
   const [val, setVal] = useState(false)
-  const [audioPath, setAudioPath] = useState('')
+  const [audioUrl, setAudioUrl] = useState('')
   const [voiceType, setVoiceType] = useState('alloy')
+  const ctx = new AudioContext();
 
   console.log('>>> val', val, setVal)
 
     const createAudio = async () => {
-      // axios
-      //   .post('https://hackathingh.loca.lt/createAudio', 
-      //     {
-      //       data: val
-      //     }
-      //   )
-      // .then((arrayBuffer) => {
-      //   //const blob = new Blob([arrayBuffer], { type: "audio/wav" });
-      //   //audio.src = window.URL.createObjectURL(blob);
-      // })
-      // .catch((error) => console.error(error));
       fetch('https://hackathingh.loca.lt/createAudio', {
         method: 'POST',
-        headers: {
+        headers:{
+          'bypass-tunnel-reminder' : '*',
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ text: val, voiceType: voiceType }),
       })
-      // .then(res => res.json())
-      // .then(data => {
-      //   console.log('>>> data', data)
-      // })
-      
+      .then(res => res.blob())
+      .then(myBlob => {
+        const obUrl = URL.createObjectURL(myBlob);
+        setAudioUrl(obUrl);
+      })
   }
 
   return (
@@ -61,13 +51,7 @@ function App() {
         }
 
         {
-          audioPath && <p>{
-            <audio controls>
-            <source src={audioPath} type="audio/ogg" />
-            <source src={audioPath} type="audio/mpeg" />
-            Your browser does not support the audio element.
-          </audio>
-          }</p>
+          audioUrl && <audio src={audioUrl} controls />
         }
       </header>
     </div>
