@@ -1,13 +1,28 @@
 import React, { useState } from "react";
 import logo from "./logo.svg";
-import axios from "axios";
 import "./App.css";
 import Checkbox from "./Checkbox.js";
 import TextInput from "./TextInput.js";
 import AudioPlayer from "./AudioPlayer.js";
 
 function App() {
-    const [audioPath, setAudioPath] = useState("");
+    const [audioUrl, setAudioUrl] = useState("");
+
+    const createAudio = async (textValue, voiceType) => {
+        fetch("https://hackathingh.loca.lt/createAudio", {
+            method: "POST",
+            headers: {
+                "bypass-tunnel-reminder": "*",
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ text: textValue, voiceType: voiceType }),
+        })
+            .then((res) => res.blob())
+            .then((myBlob) => {
+                const obUrl = URL.createObjectURL(myBlob);
+                setAudioUrl(obUrl);
+            });
+    };
 
     return (
         <>
@@ -22,24 +37,14 @@ function App() {
                         <Checkbox />
                     </div>
                     <div className="column">
-                        <TextInput />
+                        <TextInput createAudio={createAudio} />
 
                         <AudioPlayer />
                     </div>
                 </div>
             </div>
 
-            {audioPath && (
-                <p>
-                    {
-                        <audio controls>
-                            <source src={audioPath} type="audio/ogg" />
-                            <source src={audioPath} type="audio/mpeg" />
-                            Your browser does not support the audio element.
-                        </audio>
-                    }
-                </p>
-            )}
+            {audioUrl && <audio src={audioUrl} controls />}
         </>
     );
 }

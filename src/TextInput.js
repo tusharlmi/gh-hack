@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { createAudio } from "./apiHelper.js";
 
-const TextInput = () => {
+const TextInput = ({ createAudio }) => {
     const [textValue, setVal] = useState("");
     const [voiceType, setVoiceType] = useState("alloy");
 
