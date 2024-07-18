@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 const Checkbox = () => {
     const extensionData = [
         { name: "Extension 0", id: 0 },
@@ -6,12 +8,17 @@ const Checkbox = () => {
         { name: "Extension 3", id: 3 },
     ];
 
+    const [isAnyChecked, setIsAnyChecked] = useState([]);
+
     const handleChange = (e) => {
         const isChecked = e.target.checked;
         const id = e.target.id;
         console.log({ isChecked, id });
     };
 
+    // const checkChecked = (element) => element === element.isChecked;
+
+    // console.log("isAnyChecked", isAnyChecked.some(checkChecked));
     return (
         <ol>
             {extensionData.map((ext) => {

@@ -7,6 +7,8 @@ import AudioPlayer from "./AudioPlayer.js";
 
 function App() {
     const [audioUrl, setAudioUrl] = useState("");
+    const [textValue, setVal] = useState("");
+    const [voiceType, setVoiceType] = useState("alloy");
 
     const createAudio = async (textValue, voiceType) => {
         fetch("https://hackathingh.loca.lt/createAudio", {
@@ -37,14 +39,36 @@ function App() {
                         <Checkbox />
                     </div>
                     <div className="column">
-                        <TextInput createAudio={createAudio} />
+                        <figure>
+                            <figcaption>Generate speech from text:</figcaption>
 
-                        <AudioPlayer />
+                            <input
+                                type="text"
+                                value={textValue}
+                                onChange={(e) => setVal(e.target?.value)}
+                            />
+
+                            {textValue && (
+                                <p>
+                                    <select onChange={(e) => setVoiceType(e.target.value)}>
+                                        <option value="alloy">Alloy</option>
+                                        <option value="echo">Echo</option>
+                                        <option value="fable">Fable</option>
+                                        <option value="onyx">Onyx</option>
+                                        <option value="nova">Nova</option>
+                                        <option value="shimmer">Shimmer</option>
+                                    </select>
+                                    <button onClick={() => createAudio(textValue, voiceType)}>
+                                        Create Audio
+                                    </button>
+                                </p>
+                            )}
+                        </figure>
+
+                        {audioUrl && <audio src={audioUrl} controls />}
                     </div>
                 </div>
             </div>
-
-            {audioUrl && <audio src={audioUrl} controls />}
         </>
     );
 }
